@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Мини-приложение: Tap & Upgrade</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            text-align: center;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        #game-container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            display: inline-block;
+        }
+        #coins, #tapPower {
+            font-size: 1.2em;
+            margin: 10px 0;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 1em;
+            margin: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div id="game-container">
+    <h1>Tap & Upgrade</h1>
+    <div id="coins">Монеты: 0</div>
+    <div id="tapPower">Сила нажатия: 1</div>
+    <button id="tapButton">Тап!</button>
+    <br>
+    <button id="openShop">Магазин</button>
+    <div id="shop" style="display: none; margin-top: 20px;">
+        <p>Улучшение (+1 к силе) за <span id="upgradeCost">10</span> монет</p>
+        <button id="buyUpgrade">Купить улучшение</button>
+    </div>
+</div>
+
+<script>
+    // Инициализация переменных игры
+    let coins = 0;
+    let tapPower = 1;
+    let upgradeCost = 10;
+
+    const coinsDiv = document.getElementById('coins');
+    const tapPowerDiv = document.getElementById('tapPower');
+    const tapButton = document.getElementById('tapButton');
+    const openShopButton = document.getElementById('openShop');
+    const shopDiv = document.getElementById('shop');
+    const upgradeCostSpan = document.getElementById('upgradeCost');
+    const buyUpgradeButton = document.getElementById('buyUpgrade');
+
+    // Обновление отображения
+    function updateDisplay() {
+        coinsDiv.textContent = `Монеты: ${coins}`;
+        tapPowerDiv.textContent = `Сила нажатия: ${tapPower}`;
+        upgradeCostSpan.textContent = Math.floor(upgradeCost);
+    }
+
+    // Обработчик нажатия на кнопку "Тап!"
+    tapButton.addEventListener('click', () => {
+        coins += tapPower;
+        updateDisplay();
+    });
+
+    // Переключение отображения магазина
+    openShopButton.addEventListener('click', () => {
+        shopDiv.style.display = shopDiv.style.display === 'none' ? 'block' : 'none';
+    });
+
+    // Обработчик покупки улучшения
+    buyUpgradeButton.addEventListener('click', () => {
+        if (coins >= upgradeCost) {
+            coins -= upgradeCost;
+            tapPower += 1;
+            upgradeCost *= 1.5; // стоимость увеличивается на 50%
+            updateDisplay();
+        } else {
+            alert('Недостаточно монет для улучшения!');
+        }
+    });
+
+    updateDisplay();
+
+    // Telegram Web App API (если понадобится интеграция)
+    if (window.Telegram && window.Telegram.WebApp) {
+        Telegram.WebApp.ready();
+        console.log('Web App инициализирован. Данные пользователя:', Telegram.WebApp.initData);
+    }
+</script>
+
+</body>
+</html>
